@@ -14,12 +14,12 @@ func main() {
 		log.Fatal("ERROR: environment file does not exist in root directory.")
 	}
 
-	host := "0.0.0.0"
+	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
-	if port == "" {
-		log.Fatal("ERROR: PORT environment value not exported.")
+	if host == "" || port == "" {
+		log.Fatal("ERROR: HOST or PORT environment value not exported.")
 	}
-	log.Println("Listening on PORT:", port+".")
+	log.Println("Listening from ", host+":"+port+".")
 
 	server := &http.Server{
 		Addr:    host + ":" + port,
