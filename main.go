@@ -1,12 +1,18 @@
 package main
 
 import (
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/joho/godotenv"
+	"context"
+	"errors"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -19,13 +25,38 @@ func main() {
 	if host == "" || port == "" {
 		log.Fatal("ERROR: HOST or PORT environment value not exported.")
 	}
-	log.Println("Listening from ", host+":"+port+".")
+	addr := host + ":" + port
+	log.Println("Listening from", addr+".")
 
 	server := &http.Server{
-		Addr:    host + ":" + port,
+		Addr:    addr,
 		Handler: servive(),
 	}
-	if err := server.ListenAndServe(); err != nil {
+
+	sigCh, stop := signal.NotifyContext(
+		context.Background(),
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT,
+	)
+	defer stop()
+
+	go func() {
+		if err := server.ListenAndServe(); err != nil &&
+			!errors.Is(err, http.ErrServerClosed) {
+			log.Fatal(err)
+		}
+	}()
+
+	<-sigCh.Done()
+
+	shutdownCh, cancel := context.WithTimeout(
+		context.Background(),
+		30*time.Second,
+	)
+	defer cancel()
+
+	if err := server.Shutdown(shutdownCh); err != nil {
 		log.Fatal(err)
 	}
 }
