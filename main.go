@@ -69,7 +69,7 @@ func servive() http.Handler {
 	r.Use(middleware.Recoverer)
 
 	v1R := chi.NewRouter()
-	v1R.HandleFunc("/healthz", handlerReadiness)
+	v1R.Get("/healthz", handlerReadiness)
 
 	r.Mount("/v1", v1R)
 
