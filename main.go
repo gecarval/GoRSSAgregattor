@@ -68,6 +68,11 @@ func servive() http.Handler {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
+	v1R := chi.NewRouter()
+	v1R.HandleFunc("/healthz", handlerReadiness)
+
+	r.Mount("/v1", v1R)
+
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("<head></head><body><h1>Welcome</h1></body>"))
 	})
