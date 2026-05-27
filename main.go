@@ -70,6 +70,7 @@ func servive() http.Handler {
 
 	v1R := chi.NewRouter()
 	v1R.Get("/healthz", handlerReadiness)
+	v1R.Get("/err", handlerError("something went wrong"))
 
 	r.Mount("/v1", v1R)
 
