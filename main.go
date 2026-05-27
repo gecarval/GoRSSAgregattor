@@ -14,19 +14,32 @@ func main() {
 		log.Fatal("ERROR: environment file does not exist in root directory.")
 	}
 
+	host := "0.0.0.0"
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("ERROR: PORT environment value not exported.")
-	} else {
-		log.Println("Listening on PORT:", port+".")
 	}
+	log.Println("Listening on PORT:", port+".")
 
+	server := &http.Server{
+		Addr:    host + ":" + port,
+		Handler: servive(),
+	}
+	if err := server.ListenAndServe(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func servive() http.Handler {
 	r := chi.NewRouter()
+
+	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("<head></head><body><h1>Welcome</h1></body>"))
 	})
-	if err := http.ListenAndServe(":"+port, r); err != nil {
-		log.Fatal(err)
-	}
+
+	return r
 }
