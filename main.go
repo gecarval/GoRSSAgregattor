@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
@@ -17,15 +16,15 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		log.Fatal("ERROR: no PORT environment exported.")
+		log.Fatal("ERROR: PORT environment value not exported.")
 	} else {
-		fmt.Println("Listening from PORT:", port+".")
+		log.Println("Listening on PORT:", port+".")
 	}
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("<body><h1>Welcome</h1></body>"))
+		w.Write([]byte("<head></head><body><h1>Welcome</h1></body>"))
 	})
 	if err := http.ListenAndServe(":"+port, r); err != nil {
 		log.Fatal(err)
