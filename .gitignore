@@ -1,3 +1,4 @@
-.vscode
-GoRSSAgregattor
 .env
+.vscode
+vendor
+GoRSSAgregattor
