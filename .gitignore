@@ -1,4 +1,5 @@
 .env
 .vscode
+go.sum
 vendor
 GoRSSAgregattor
