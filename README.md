@@ -3,6 +3,6 @@
 ## Environment file setup
 
 ```sh
-HOST=localhost
+HOSTNAME=localhost
 PORT=8080
 ```

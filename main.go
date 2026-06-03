@@ -20,7 +20,7 @@ func main() {
 		log.Fatal("ERROR: environment file does not exist in root directory.")
 	}
 
-	host := os.Getenv("HOST")
+	host := os.Getenv("HOSTNAME")
 	port := os.Getenv("PORT")
 	if host == "" || port == "" {
 		log.Fatal("ERROR: HOST or PORT environment value not exported.")
