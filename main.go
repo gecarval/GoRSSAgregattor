@@ -23,7 +23,7 @@ func main() {
 	host := os.Getenv("HOSTNAME")
 	port := os.Getenv("PORT")
 	if host == "" || port == "" {
-		log.Fatal("ERROR: HOST or PORT environment value not exported.")
+		log.Fatal("ERROR: HOSTNAME or PORT environment value not exported.")
 	}
 	addr := host + ":" + port
 	log.Println("Listening from", addr+".")
